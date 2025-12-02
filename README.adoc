@@ -1,0 +1,51 @@
+= Advent of Code 2025 in Rust
+:toc: macro
+:toclevels: 2
+
+== Overview
+
+This repository contains solutions for Advent of Code 2025 implemented in Rust.  
+Each day’s challenge is organized under `src/days/day{number}.rs`.
+
+== Usage
+
+You can run a specific day’s solution with:
+
+[source, sh]
+----
+cargo run -- {day} [part1|part2]
+----
+
+Examples:
+
+[source, sh]
+----
+cargo run -- 1
+cargo run -- 1 part1
+cargo run -- 1 part2
+----
+
+If no part is specified, the default behavior runs both parts.
+
+== Tests
+
+Run tests for a specific day with:
+
+[source, sh]
+----
+cargo test -- day{day}_[part1|part2]
+----
+
+Examples:
+
+[source,sh]
+----
+cargo test -- day01
+cargo test -- day01_part1
+cargo test -- day01_part2
+----
+
+== License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).  
+See the LICENSE file for details.
