@@ -13,14 +13,14 @@ macro_rules! days {
             match (day, part) {
                 $(
                     ($day, Some("part1")) => {
-                        days::$mod::part1(&input);
+                        println!("{}", days::$mod::part1(&input));
                     }
                     ($day, Some("part2")) => {
-                        days::$mod::part2(&input);
+                        println!("{}", days::$mod::part2(&input));
                     }
                     ($day, None) => {
-                        days::$mod::part1(&input);
-                        days::$mod::part2(&input);
+                        println!("{}", days::$mod::part1(&input));
+                        println!("{}", days::$mod::part2(&input));
                     }
                 ),+
                 _ => {
