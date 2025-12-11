@@ -1,8 +1,8 @@
-pub fn part1(input: &str) -> String {
+pub fn part1(_input: &str) -> String {
     "Solve part1".to_owned()
 }
 
-pub fn part2(input: &str) -> String {
+pub fn part2(_input: &str) -> String {
     "Solve part2".to_owned()
 }
 

@@ -11,7 +11,7 @@ impl FromStr for IdRange {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (start, end) = s
-            .split_once("-")
+            .split_once('-')
             .ok_or_else(|| "Expect range bounds to be separated by a dash".to_owned())?;
         Ok(Self {
             start: start

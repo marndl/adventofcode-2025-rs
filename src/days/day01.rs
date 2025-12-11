@@ -21,7 +21,7 @@ impl FromStr for Instruction {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (direction, distance) = s.split_at(1);
 
-        Ok(Instruction {
+        Ok(Self {
             direction: match direction {
                 "L" => Direction::Left,
                 "R" => Direction::Right,
@@ -29,7 +29,7 @@ impl FromStr for Instruction {
             },
             distance: distance
                 .parse()
-                .map_err(|err| format!("Expect dial value after direction: {}", err))?,
+                .map_err(|err| format!("Expect dial value after direction: {err}"))?,
         })
     }
 }
@@ -42,7 +42,7 @@ impl Dial {
         Self::default()
     }
 
-    fn is_zero(&self) -> bool {
+    fn is_zero(self) -> bool {
         self.0 == 0
     }
 }
@@ -99,7 +99,7 @@ pub fn part1(input: &str) -> String {
     password.to_string()
 }
 
-pub fn part2(input: &str) -> String {
+pub fn part2(_input: &str) -> String {
     "Solve part2".to_owned()
 }
 

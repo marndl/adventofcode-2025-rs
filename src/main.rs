@@ -7,6 +7,6 @@ fn main() {
         .expect("The [day] argument is required")
         .parse::<u8>()
         .expect("First argument should be the day");
-    let part = args.get(1).map(|part| part.as_str());
+    let part = args.get(1).map(String::as_str);
     run(day, part);
 }
