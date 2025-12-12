@@ -35,7 +35,10 @@ impl FromStr for Instruction {
 }
 
 #[derive(Debug, Clone, Copy)]
-struct Dial(u32);
+struct Dial {
+    value: u32,
+    zero_counter: u32,
+}
 
 impl Dial {
     fn new() -> Self {
@@ -43,29 +46,48 @@ impl Dial {
     }
 
     fn is_zero(self) -> bool {
-        self.0 == 0
+        self.value == 0
+    }
+
+    fn zero_counter(self) -> u32 {
+        self.zero_counter
     }
 }
 
 impl Default for Dial {
     fn default() -> Self {
-        Self(50)
+        Self {
+            value: 50,
+            zero_counter: 0,
+        }
     }
 }
 
 impl AddAssign<u32> for Dial {
     fn add_assign(&mut self, rhs: u32) {
-        self.0 = (self.0 + rhs).rem_euclid(100);
+        self.zero_counter = rhs / 100;
+        let mut new_value = self.value + rhs % 100;
+
+        if self.value != 0 && (new_value > 99 || new_value == 0) {
+            self.zero_counter += 1;
+        }
+
+        new_value = new_value.rem_euclid(100);
+        self.value = new_value;
     }
 }
 
 impl SubAssign<u32> for Dial {
     fn sub_assign(&mut self, rhs: u32) {
-        self.0 = (i32::try_from(self.0).expect("dial value to be in range 0-99")
-            - i32::try_from(rhs).expect("distance value to fit in i32"))
-        .rem_euclid(100)
-        .try_into()
-        .unwrap();
+        self.zero_counter = rhs / 100;
+        let mut new_value = i32::try_from(self.value).unwrap() - i32::try_from(rhs % 100).unwrap();
+
+        if self.value != 0 && new_value <= 0 {
+            self.zero_counter += 1;
+        }
+
+        new_value = new_value.rem_euclid(100);
+        self.value = u32::try_from(new_value).unwrap();
     }
 }
 
@@ -99,8 +121,23 @@ pub fn part1(input: &str) -> String {
     password.to_string()
 }
 
-pub fn part2(_input: &str) -> String {
-    "Solve part2".to_owned()
+pub fn part2(input: &str) -> String {
+    let instructions = input
+        .trim()
+        .lines()
+        .map(Instruction::from_str)
+        .collect::<Result<Vec<_>, _>>()
+        .expect("puzzle input to be valid");
+
+    let mut password = 0;
+    let mut dial = Dial::new();
+
+    for instruction in instructions {
+        dial += instruction;
+        password += dial.zero_counter();
+    }
+
+    password.to_string()
 }
 
 #[cfg(test)]
@@ -127,6 +164,19 @@ mod test {
 
     #[test]
     fn day01_part2() {
-        assert_eq!(part2(""), "Solve part2");
+        let instructions = indoc! {"
+            L68
+            L30
+            R48
+            L5
+            R60
+            L55
+            L1
+            L99
+            R14
+            L82
+            L1000
+        "};
+        assert_eq!(part2(instructions), "16");
     }
 }
