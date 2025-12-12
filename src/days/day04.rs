@@ -50,10 +50,7 @@ pub fn part1(input: &str) -> String {
 }
 
 pub fn part2(input: &str) -> String {
-    let mut diagram = parse_diagram(input)
-        .into_iter()
-        .map(|row| row.to_vec())
-        .collect::<Vec<_>>();
+    let mut diagram = parse_diagram(input);
     let mut total_removed_rolls = 0;
 
     loop {
