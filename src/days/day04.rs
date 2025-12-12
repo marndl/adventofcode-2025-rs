@@ -1,12 +1,14 @@
-pub fn part1(input: &str) -> String {
-    let diagram = input
+fn parse_diagram(input: &str) -> Vec<Vec<u8>> {
+    input
         .lines()
-        .map(|line| line.trim().as_bytes())
-        .collect::<Vec<_>>();
+        .map(|line| line.trim().as_bytes().to_vec())
+        .collect()
+}
 
-    let mut reachable_rolls = 0;
+fn find_reachable_rolls(diagram: &[Vec<u8>]) -> Vec<(usize, usize)> {
+    let mut reachable_rolls = vec![];
 
-    for (y, &row) in diagram.iter().enumerate() {
+    for (y, row) in diagram.iter().enumerate() {
         for (x, &position) in row.iter().enumerate() {
             if position == b'.' {
                 continue;
@@ -25,7 +27,7 @@ pub fn part1(input: &str) -> String {
 
                     if diagram
                         .get(y)
-                        .and_then(|&row| row.get(x))
+                        .and_then(|row| row.get(x))
                         .is_some_and(|&position| position == b'@')
                     {
                         roll_counter += 1;
@@ -34,12 +36,17 @@ pub fn part1(input: &str) -> String {
             }
 
             if roll_counter < 4 {
-                reachable_rolls += 1;
+                reachable_rolls.push((y, x));
             }
         }
     }
 
-    reachable_rolls.to_string()
+    reachable_rolls
+}
+
+pub fn part1(input: &str) -> String {
+    let diagram = parse_diagram(input);
+    find_reachable_rolls(&diagram).len().to_string()
 }
 
 pub fn part2(_input: &str) -> String {
