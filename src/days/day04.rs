@@ -49,8 +49,28 @@ pub fn part1(input: &str) -> String {
     find_reachable_rolls(&diagram).len().to_string()
 }
 
-pub fn part2(_input: &str) -> String {
-    "Solve part2".to_owned()
+pub fn part2(input: &str) -> String {
+    let mut diagram = parse_diagram(input)
+        .into_iter()
+        .map(|row| row.to_vec())
+        .collect::<Vec<_>>();
+    let mut total_removed_rolls = 0;
+
+    loop {
+        let reachable_rolls = find_reachable_rolls(&diagram);
+
+        if reachable_rolls.is_empty() {
+            break;
+        }
+
+        total_removed_rolls += reachable_rolls.len();
+
+        reachable_rolls
+            .into_iter()
+            .for_each(|(y, x)| diagram[y][x] = b'.');
+    }
+
+    total_removed_rolls.to_string()
 }
 
 #[cfg(test)]
@@ -77,6 +97,18 @@ mod test {
 
     #[test]
     fn day04_part2() {
-        assert_eq!(part2(""), "Solve part2");
+        let roll_diagram = indoc! {"
+            ..@@.@@@@.
+            @@@.@.@.@@
+            @@@@@.@.@@
+            @.@@@@..@.
+            @@.@@@@.@@
+            .@@@@@@@.@
+            .@.@.@.@@@
+            @.@@@.@@@@
+            .@@@@@@@@.
+            @.@.@@@.@.
+        "};
+        assert_eq!(part2(roll_diagram), "43");
     }
 }
