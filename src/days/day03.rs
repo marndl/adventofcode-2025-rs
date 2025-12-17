@@ -16,6 +16,24 @@ impl Bank {
 
         highest_jolt * 10 + self.batteries.iter().skip(battery_index + 1).max().unwrap()
     }
+
+    fn highest_jolt_with_12_batteries(&self) -> u64 {
+        let mut result = 0;
+        let mut start = 0;
+
+        for rest in (0..=11).rev() {
+            let (index, digit) = self.batteries[start..(self.batteries.len() - rest)]
+                .iter()
+                .copied()
+                .enumerate()
+                .max_by(|(index_x, x), (index_y, y)| x.cmp(y).then(index_x.cmp(index_y).reverse()))
+                .expect("at least one digit to remain in current search space");
+            start += index + 1;
+            result += u64::from(digit) * 10u64.pow(u32::try_from(rest).unwrap());
+        }
+
+        result
+    }
 }
 
 fn parse_input(input: &str) -> Vec<Bank> {
@@ -43,8 +61,12 @@ pub fn part1(input: &str) -> String {
         .to_string()
 }
 
-pub fn part2(_input: &str) -> String {
-    "Solve part2".to_owned()
+pub fn part2(input: &str) -> String {
+    parse_input(input)
+        .iter()
+        .map(Bank::highest_jolt_with_12_batteries)
+        .sum::<u64>()
+        .to_string()
 }
 
 #[cfg(test)]
@@ -64,6 +86,12 @@ mod test {
 
     #[test]
     fn day03_part2() {
-        assert_eq!(part2(""), "Solve part2");
+        let banks = indoc::indoc! {"
+            987654321111111
+            811111111111119
+            234234234234278
+            818181911112111
+        "};
+        assert_eq!(part2(banks), "3121910778619");
     }
 }
