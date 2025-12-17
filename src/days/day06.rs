@@ -41,8 +41,55 @@ pub fn part1(input: &str) -> String {
     results.into_iter().sum::<u64>().to_string()
 }
 
-pub fn part2(_input: &str) -> String {
-    "Solve part2".to_owned()
+pub fn part2(input: &str) -> String {
+    let mut input = input.lines().rev();
+    let operations = input.next().unwrap().as_bytes();
+    let numbers = input.rev().map(str::as_bytes).collect::<Vec<_>>();
+
+    let mut total = 0;
+    let mut current_operation: fn(u64, u64) -> u64 = |_, _| 0;
+    let mut current_result = 0;
+    let mut raw_number_buffer = Vec::with_capacity(numbers.len());
+
+    for column in 0..operations.len() {
+        raw_number_buffer.clear();
+
+        if operations[column] != b' ' {
+            total += current_result;
+            current_result = 0;
+            current_operation = match operations[column] {
+                b'*' => |x, y| x * y,
+                b'+' => |x, y| x + y,
+                operation => panic!("Unknown operation: {operation}"),
+            };
+        }
+
+        for row in &numbers {
+            raw_number_buffer.push(row[column]);
+        }
+
+        let number_str = str::from_utf8(&raw_number_buffer)
+            .expect("input to only contain ascii digits and spaces")
+            .trim();
+
+        if number_str.is_empty() {
+            continue;
+        }
+
+        let number = number_str
+            .parse::<u64>()
+            .expect("buffer to only contain digits");
+
+        if current_result == 0 {
+            current_result = number;
+        } else {
+            current_result = current_operation(current_result, number);
+        }
+    }
+
+    total += current_result;
+
+    total.to_string()
 }
 
 #[cfg(test)]
@@ -63,6 +110,12 @@ mod test {
 
     #[test]
     fn day06_part2() {
-        assert_eq!(part2(""), "Solve part2");
+        let input = indoc! {"
+            123 328  51 64 
+             45 64  387 23 
+              6 98  215 314
+            *   +   *   +  
+        "};
+        assert_eq!(part2(input), "3263827");
     }
 }
