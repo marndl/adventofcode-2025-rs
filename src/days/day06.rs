@@ -97,25 +97,20 @@ mod test {
     use super::*;
     use indoc::indoc;
 
+    const INPUT: &str = indoc! {"
+        123 328  51 64 
+         45 64  387 23 
+          6 98  215 314
+        *   +   *   +  
+    "};
+
     #[test]
     fn day06_part1() {
-        let input = indoc! {"
-            123 328 51 64 
-            45 64 387 23 
-            6 98 215 314
-            * + * +
-        "};
-        assert_eq!(part1(input), "4277556");
+        assert_eq!(part1(INPUT), "4277556");
     }
 
     #[test]
     fn day06_part2() {
-        let input = indoc! {"
-            123 328  51 64 
-             45 64  387 23 
-              6 98  215 314
-            *   +   *   +  
-        "};
-        assert_eq!(part2(input), "3263827");
+        assert_eq!(part2(INPUT), "3263827");
     }
 }

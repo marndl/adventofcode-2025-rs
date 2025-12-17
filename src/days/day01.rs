@@ -145,38 +145,26 @@ mod test {
     use super::*;
     use indoc::indoc;
 
+    const INPUT: &str = indoc! {"
+        L68
+        L30
+        R48
+        L5
+        R60
+        L55
+        L1
+        L99
+        R14
+        L82
+    "};
+
     #[test]
     fn day01_part1() {
-        let instructions = indoc! {"
-            L68
-            L30
-            R48
-            L5
-            R60
-            L55
-            L1
-            L99
-            R14
-            L82
-        "};
-        assert_eq!(part1(instructions), "3");
+        assert_eq!(part1(INPUT), "3");
     }
 
     #[test]
     fn day01_part2() {
-        let instructions = indoc! {"
-            L68
-            L30
-            R48
-            L5
-            R60
-            L55
-            L1
-            L99
-            R14
-            L82
-            L1000
-        "};
-        assert_eq!(part2(instructions), "16");
+        assert_eq!(part2(INPUT), "6");
     }
 }

@@ -72,26 +72,22 @@ pub fn part2(input: &str) -> String {
 #[cfg(test)]
 mod test {
     use super::*;
+    use indoc::indoc;
+
+    const INPUT: &str = indoc! {"
+        987654321111111
+        811111111111119
+        234234234234278
+        818181911112111
+    "};
 
     #[test]
     fn day03_part1() {
-        let banks = indoc::indoc! {"
-            987654321111111
-            811111111111119
-            234234234234278
-            818181911112111
-        "};
-        assert_eq!(part1(banks), "357");
+        assert_eq!(part1(INPUT), "357");
     }
 
     #[test]
     fn day03_part2() {
-        let banks = indoc::indoc! {"
-            987654321111111
-            811111111111119
-            234234234234278
-            818181911112111
-        "};
-        assert_eq!(part2(banks), "3121910778619");
+        assert_eq!(part2(INPUT), "3121910778619");
     }
 }

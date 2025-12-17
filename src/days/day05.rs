@@ -86,9 +86,7 @@ mod test {
     use super::*;
     use indoc::indoc;
 
-    #[test]
-    fn day05_part1() {
-        let database = indoc! {"
+    const INPUT: &str = indoc! {"
             3-5
             10-14
             16-20
@@ -100,25 +98,15 @@ mod test {
             11
             17
             32
-        "};
-        assert_eq!(part1(database), "3");
+    "};
+
+    #[test]
+    fn day05_part1() {
+        assert_eq!(part1(INPUT), "3");
     }
 
     #[test]
     fn day05_part2() {
-        let database = indoc! {"
-            3-5
-            10-14
-            16-20
-            12-18
-
-            1
-            5
-            8
-            11
-            17
-            32
-        "};
-        assert_eq!(part2(database), "14");
+        assert_eq!(part2(INPUT), "14");
     }
 }
