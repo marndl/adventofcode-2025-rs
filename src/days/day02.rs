@@ -53,6 +53,42 @@ impl IdRange {
 
         invalid_ids
     }
+
+    fn sum_invalid_ids_additional_patterns(&self) -> u64 {
+        let mut invalid_ids = 0;
+
+        for id in self.start..=self.end {
+            let id_str = id.to_string();
+            let id_bytes = id_str.as_bytes();
+            let halfpoint = id_bytes.len() / 2;
+
+            for pattern_length in 1..=halfpoint {
+                let pattern = &id_bytes[0..pattern_length];
+
+                let mut pattern_fits = true;
+
+                for i in (0..id_bytes.len()).step_by(pattern.len()) {
+                    if i + pattern_length > id_bytes.len() {
+                        pattern_fits = false;
+                        break;
+                    }
+                    let a = &id_bytes[i..(i + pattern_length)];
+
+                    if a != pattern {
+                        pattern_fits = false;
+                        break;
+                    }
+                }
+
+                if pattern_fits {
+                    invalid_ids += id;
+                    break;
+                }
+            }
+        }
+
+        invalid_ids
+    }
 }
 
 pub fn part1(input: &str) -> String {
@@ -69,8 +105,18 @@ pub fn part1(input: &str) -> String {
         .to_string()
 }
 
-pub fn part2(_input: &str) -> String {
-    "Solve part2".to_owned()
+pub fn part2(input: &str) -> String {
+    input
+        .split(',')
+        .map(|raw_id_range| {
+            raw_id_range
+                .trim()
+                .parse::<IdRange>()
+                .expect("puzzle input to be valid")
+                .sum_invalid_ids_additional_patterns()
+        })
+        .sum::<u64>()
+        .to_string()
 }
 
 #[cfg(test)]
@@ -90,6 +136,11 @@ mod test {
 
     #[test]
     fn day02_part2() {
-        assert_eq!(part2(""), "Solve part2");
+        let ids = indoc! {"
+            11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
+            1698522-1698528,446443-446449,38593856-38593862,565653-565659,
+            824824821-824824827,2121212118-2121212124
+        "};
+        assert_eq!(part2(ids), "4174379265");
     }
 }
