@@ -2,13 +2,17 @@ mod days;
 
 macro_rules! days {
     ($($day:literal = $mod:ident),+ $(,)?) => {
+        pub const ALL_DAYS: &[u8] = &[$( $day ),+];
+
         pub fn run(day: u8, part: Option<&str>) {
+            if !ALL_DAYS.contains(&day) {
+                panic!("Unknown day try one of {ALL_DAYS:?}");
+            }
+
             let input_path = format!("{}/input/day{day:02}.txt", env!("CARGO_MANIFEST_DIR"));
             let Ok(input) = std::fs::read_to_string(&input_path) else {
-                panic!("Could not read input for day{day:02} ({input_path})");
+                panic!("Could not read input for day{day:02} ({input_path}). Does the file exist?");
             };
-
-            let all_days = &[$( $day ),+];
 
             match (day, part) {
                 $(
@@ -24,7 +28,7 @@ macro_rules! days {
                     }
                 ),+
                 _ => {
-                    panic!("Unknown day or part try one of {all_days:?} and [part1|part2|<omit>]");
+                    panic!("Unknown part try one of [part1|part2|<omit>]");
                 }
             }
         }
